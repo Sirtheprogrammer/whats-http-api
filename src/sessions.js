@@ -1,10 +1,8 @@
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
-import { pino } from '../src/logger.js';
+import pino from './logger.js';
 import makeWa from 'whatsapp-web.js';
-const { Client, LocalAuth, Location, List, Buttons, MessageMedia } = makeWa;
-
-const sessions = new Map();
+const { Client, LocalAuth } = makeWa;
 const logger = pino.child({ module: 'SessionManager' });
 
 class SessionManager {
