@@ -4,6 +4,7 @@ import pino from './logger.js';
 import makeWa from 'whatsapp-web.js';
 const { Client, LocalAuth } = makeWa;
 const logger = pino.child({ module: 'SessionManager' });
+const sessions = new Map();
 
 class SessionManager {
   constructor() {
