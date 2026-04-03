@@ -62,9 +62,13 @@ router.post('/sessions', async (req, res) => {
 });
 
 // GET /sessions - List all sessions
-router.get('/sessions', (req, res) => {
-  const sessions = sessionManager.getAll();
-  res.json({ success: true, sessions });
+router.get('/sessions', async (req, res) => {
+  try {
+    const sessions = await sessionManager.getAll();
+    res.json({ success: true, sessions });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // GET /sessions/:sessionId - Get session status
