@@ -1,3 +1,5 @@
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import express from 'express';
 import config from './config.js';
@@ -13,6 +15,8 @@ import groupsRouter from './routes/groups.js';
 import mediaRouter from './routes/media.js';
 import statusRouter from './routes/status.js';
 import webhooksRouter from './routes/webhooks.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -41,9 +45,17 @@ app.use('/api', webhooksRouter);
 // Also expose session management at root for convenience
 app.use('/', sessionsRouter);
 
-// 404
-app.use((req, res) => {
+// Serve dashboard static files
+app.use(express.static(join(__dirname, '../dashboard/dist')));
+
+// 404 for API routes
+app.use('/api/*', (req, res) => {
   res.status(404).json({ success: false, error: `Route ${req.method} ${req.path} not found` });
+});
+
+// Serve dashboard for all other routes (SPA fallback)
+app.use((req, res) => {
+  res.sendFile(join(__dirname, '../dashboard/dist/index.html'));
 });
 
 // Error handler
